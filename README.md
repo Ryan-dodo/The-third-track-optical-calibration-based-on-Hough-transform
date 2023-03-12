@@ -15,7 +15,7 @@
 以往关于我国对接触轨的检测主要以人工手动检测为主，在地铁运行的“天窗”时间内手持接触轨检测尺检测接触轨几何参数，这种检测方式需要大量人力，且检测精度和效率都比较低。而对精度高的接触轨几何参数检测装置研究关注较少，本课题通过对理解轨道交通的牵引动力馈送方式及原理基础上，综述接触轨和架空接触悬挂方式、第三轨馈电结构现状及其技术要求明确走行轨和第三轨的关系及第三轨检测的目的及意义。在此基础上构建第三轨测量机构的几何特征参数，分析2D激光扫描的光学特性，建立光学参数和测量机构几何参数的标定方案。采集标定样块的实测点云数据，通过霍夫线变换完成相关参数的标定参数计算及软件的设计。后提炼研究结论，指出不足之处和提出研究展望。课题将理论与实践相结合，在第三轨检测领域的研究有一定的研究价值及可行性。
 ## 部分算法
 ### 霍夫空间演示
-[图片]:https://raw.githubusercontent.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/main/%E9%9C%8D%E5%A4%AB%E7%A9%BA%E9%97%B4.jpg
+![avatar](https://raw.githubusercontent.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/main/%E9%9C%8D%E5%A4%AB%E7%A9%BA%E9%97%B4.jpg)
 ### 交点投票
 未完待续
 ## 总结
