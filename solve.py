@@ -5,11 +5,11 @@ import math
 
 # @Author  : Ryan
 # @Email   : ryan1057@csu.edu.cn
-# @File    : hofu.py
+# @File    : solve.py
 # @Software: PyCharm
-# @Time    : 2022/6/4 16:04
-# @Github  : https://github.com/Ryan-dodo/Chinese_License_plate_recognition
-# @using   : 绘制霍夫空间
+# @Time    : 2023-03-14 13：23
+# @Github  : https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform
+# @using   : 投票找点
 
 exampleFile = open('4.csv')  # 打开csv文件
 exampleReader = csv.reader(exampleFile)  # 读取csv文件
