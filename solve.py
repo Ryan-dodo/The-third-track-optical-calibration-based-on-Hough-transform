@@ -7,7 +7,7 @@ import math
 # @Email   : ryan1057@csu.edu.cn
 # @File    : solve.py
 # @Software: PyCharm
-# @Time    : 2023-03-14 13：23
+# @Time    : 2023-04-11 10:31
 # @Github  : https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform
 # @using   : 投票找点
 
@@ -32,7 +32,7 @@ while temp < 3.14:
     temp = temp + 0.01
 
 vote_list = [[0] * 401 for _ in range(315)]
-# -50,250, -50-249 300
+# -50,250, -50-349 300
 
 for j in range(0, length_zu):
     rho = []
@@ -44,9 +44,6 @@ for j in range(0, length_zu):
     for i in range(len(rho)):
         vote_list[i][rho[i]] += 1
 
-    for i in range(len(rho)):
-        vote_list[i][round(rho[i]) + 50] += 1
-    #
     del rho
 # for i in vote_list:
 #     print(i)
@@ -73,6 +70,54 @@ for i in range(40):
 print(max_val)
 print(max_theta)
 print(max_rho)
-print(len(max_val))
-print(len(max_theta))
+for i in range(len(max_rho)):
+    max_rho[i] -= 50
 print(len(max_rho))
+
+select = []
+if select == [] and max_val != []:
+    select.append(max_theta[0])
+for i in max_theta:
+    find = False
+    for j in select:
+        if abs(j - i) < 10:
+            find = True
+            break
+    if not find:
+        select.append(i)
+print(select)
+last_theta = []
+last_rho = []
+for i in range(len(select)):
+    vote_sum = 0
+    theta_sum = 0
+    rho_sum = 0
+    for j in range(len(max_val)):
+        if abs(max_theta[j] - select[i]) < 10:
+            vote_sum += max_val[j]
+            theta_sum += max_val[j] * max_theta[j]
+            rho_sum += max_rho[j] * max_val[j]
+    last_theta.append((theta_sum + 0.0) / vote_sum)
+    last_rho.append((rho_sum + 0.0) / vote_sum)
+print(last_rho)
+print(last_theta)
+lineK = []
+lineB = []
+for i in range(len(last_theta)):
+    lineB.append(last_rho[i] / math.sin(last_theta[i] / 100))
+    lineK.append(-1 * math.cos(last_theta[i] / 100) / math.sin(last_theta[i] / 100))
+print(lineK)
+print(lineB)
+for i in range(len(lineK)):
+    if lineK[i] > 0:
+        can_b = abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) + 140 + 90 * math.cos(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
+        print('参数B为：', end='')
+        print(can_b)
+        print("测算角度为：", end='')
+        jiaodu = 90 - math.atan(lineK[i]) / math.pi * 180
+        print(jiaodu, end='')
+        print('度')
+    else:
+        can_a = 700 - abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) - 46 - 90 * math.sin(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
+        print('参数A为：',end='')
+        print(can_a)
