@@ -5,9 +5,9 @@ import math
 
 # @Author  : Ryan
 # @Email   : ryan1057@csu.edu.cn
-# @File    : alpha_try.py
+# @File    : solve.py
 # @Software: PyCharm
-# @Time    : 2023-04-11 16:12
+# @Time    : 2023-04-11 16:32
 # @Github  : https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform
 # @using   : 投票找点
 
@@ -108,19 +108,19 @@ for i in range(len(last_theta)):
     lineK.append(-1 * math.cos(last_theta[i] / 100) / math.sin(last_theta[i] / 100))
 print(lineK)
 print(lineB)
-for i in range(len(lineK)):
-    if lineK[i] > 0:
-        can_b = abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) + 140 + 90 * math.cos(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
-        print('参数B为：', end='')
-        print(can_b)
-        print("测算角度为：", end='')
-        jiaodu = 90 - math.atan(lineK[i]) / math.pi * 180
-        print(jiaodu, end='')
-        print('度')
-    else:
-        can_a = 700 - abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) - 46 - 90 * math.sin(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
-        print('参数A为：',end='')
-        print(can_a)
+# for i in range(len(lineK)):
+#     if lineK[i] > 0:
+#         can_b = abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) + 140 + 90 * math.cos(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
+#         print('参数B为：', end='')
+#         print(can_b)
+#         print("测算角度为：", end='')
+#         jiaodu = 90 - math.atan(lineK[i]) / math.pi * 180
+#         print(jiaodu, end='')
+#         print('度')
+#     else:
+#         can_a = 700 - abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) - 46 - 90 * math.sin(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
+#         print('参数A为：',end='')
+#         print(can_a)
 
 list_line = []
 for i in range(10000):
@@ -167,4 +167,34 @@ for i in range(len(select_line1_x)):
     sigma_line1_yi += select_line1_y[i]
     sigma_line1_xi_yi += select_line1_x[i] * select_line1_y[i]
 line1_a = (sigma_line1_xi_2 * sigma_line1_yi - sigma_line1_xi * sigma_line1_xi_yi)/(len(select_line1_x) * sigma_line1_xi_2 - sigma_line1_xi * sigma_line1_xi)
-print(line1_a)
+line1_b = (len(select_line1_x) * sigma_line1_xi_yi - sigma_line1_yi * sigma_line1_xi)/(len(select_line1_x) * sigma_line1_xi_2 - sigma_line1_xi * sigma_line1_xi)
+
+sigma_line2_xi_2 = 0
+sigma_line2_yi = 0
+sigma_line2_xi = 0
+sigma_line2_xi_yi = 0
+for i in range(len(select_line2_x)):
+    sigma_line2_xi_2 += select_line2_x[i] * select_line2_x[i]
+    sigma_line2_xi += select_line2_x[i]
+    sigma_line2_yi += select_line2_y[i]
+    sigma_line2_xi_yi += select_line2_x[i] * select_line2_y[i]
+line2_a = (sigma_line2_xi_2 * sigma_line2_yi - sigma_line2_xi * sigma_line2_xi_yi)/(len(select_line2_x) * sigma_line2_xi_2 - sigma_line2_xi * sigma_line2_xi)
+line2_b = (len(select_line2_x) * sigma_line2_xi_yi - sigma_line2_yi * sigma_line2_xi)/(len(select_line2_x) * sigma_line2_xi_2 - sigma_line2_xi * sigma_line2_xi)
+
+lineK[0] = line1_b
+lineK[1] = line2_b
+lineB[0] = line1_a
+lineB[0] = line2_a
+for i in range(len(lineK)):
+    if lineK[i] > 0:
+        can_b = abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) + 140 + 90 * math.cos(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
+        print('参数B为：', end='')
+        print(can_b)
+        print("测算角度为：", end='')
+        jiaodu = 90 - math.atan(lineK[i]) / math.pi * 180
+        print(jiaodu, end='')
+        print('度')
+    else:
+        can_a = 700 - abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) - 46 - 90 * math.sin(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
+        print('参数A为：',end='')
+        print(can_a)
