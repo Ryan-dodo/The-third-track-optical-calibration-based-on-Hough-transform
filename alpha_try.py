@@ -188,13 +188,13 @@ lineB[0] = line2_a
 for i in range(len(lineK)):
     if lineK[i] > 0:
         can_b = abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) + 140 + 90 * math.cos(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
-        print('参数B为：', end='')
+        print('导高为：', end='')
         print(can_b)
-        print("测算角度为：", end='')
+        print("角度为：", end='')
         jiaodu = 90 - math.atan(lineK[i]) / math.pi * 180
         print(jiaodu, end='')
         print('度')
     else:
         can_a = 700 - abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) - 46 - 90 * math.sin(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
-        print('参数A为：',end='')
+        print('拉出值为：',end='')
         print(can_a)
