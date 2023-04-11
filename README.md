@@ -18,5 +18,8 @@
 <img decoding="async" src="https://raw.githubusercontent.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/main/%E9%9C%8D%E5%A4%AB%E7%A9%BA%E9%97%B44.jpg" width="50%">
 ### 交点投票
 未完待续
+<img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/4_with_line.png" width="50%">
+<img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/4_select_line1.png" width="50%">
+<img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/4_select_line2.png" width="50%">
 ## 总结
 未完待续
