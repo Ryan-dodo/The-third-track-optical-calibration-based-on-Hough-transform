@@ -6,7 +6,7 @@ import math
 # @Email   : ryan1057@csu.edu.cn
 # @File    : hofu.py
 # @Software: PyCharm
-# @Time    : 2023-04-14 16:30
+# @Time    : 2023-04-14 16:43
 # @Github  : https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform
 # @using   : 绘制霍夫空间
 
@@ -55,10 +55,10 @@ while temp < 350:
     temp = temp + 1
 
 # 绘制网格
-for i in theta:
-    ax.axvline(x=i, ymin=-50, ymax=350)
-for i in rho:
-    ax.axhline(y=i, xmin=0, xmax=3.15)
+# for i in theta:
+#     ax.axvline(x=i, ymin=-50, ymax=350)
+# for i in rho:
+#     ax.axhline(y=i, xmin=0, xmax=3.15)
 
 # 选出票数大于200的点
 max_val = [293, 287, 283, 258, 248, 244, 228, 220, 201]
@@ -71,6 +71,11 @@ for i in range(len(max_val)):
     max_val[i] = max_val[i] / 100 * 3
 for i in range(len(max_val)):
     plt.scatter(max_theta[i], max_rho[i],s=max_val[i]**2,c='b')
+
+# 绘制加权平均点
+last_rho = [125.56021409455843, 129.24276950043821]
+last_theta = [0.7753434433541481, 2.3397370727432076]
+plt.scatter(last_theta, last_rho,s=8**2,c='r')
 
 plt.show()  # 显示
 # plt.savefig('xx4.jpg')
