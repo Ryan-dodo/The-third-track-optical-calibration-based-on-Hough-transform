@@ -19,9 +19,7 @@
 ### 交点投票
 未完待续
 <img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/4_with_line.png" width="50%">
-<img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/4_select_line1.png" width="50%">
-<img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/4_select_line2.png" width="50%">
-<img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/%E9%9C%8D%E5%A4%AB%E5%B8%A6%E7%BD%91%E6%A0%BC.png">
+
 
 <img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/%E9%80%89%E7%82%B9.png">
 <img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/%E9%80%89%E7%82%B9%E6%94%BE%E5%A4%A71.png">
@@ -32,5 +30,9 @@
 <img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/%E5%8A%A0%E6%9D%83%E5%B9%B3%E5%9D%87%E7%82%B9.png">
 <img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/%E5%8A%A0%E6%9D%83%E5%B9%B3%E5%9D%87%E7%82%B9%E6%94%BE%E5%A4%A71.png">
 <img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/%E5%8A%A0%E6%9D%83%E5%B9%B3%E5%9D%87%E7%82%B9%E6%94%BE%E5%A4%A72.png">
+
+<img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/4_select_line1.png" width="50%">
+<img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/4_select_line2.png" width="50%">
+<img decoding="async" src="https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform/blob/main/%E9%9C%8D%E5%A4%AB%E5%B8%A6%E7%BD%91%E6%A0%BC.png">
 ## 总结
 未完待续
