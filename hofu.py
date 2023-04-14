@@ -7,8 +7,8 @@ import math
 # @Email   : ryan1057@csu.edu.cn
 # @File    : hofu.py
 # @Software: PyCharm
-# @Time    : 2022/6/4 16:04
-# @Github  : https://github.com/Ryan-dodo/Chinese_License_plate_recognition
+# @Time    : 2023-04-14 时间
+# @Github  : https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform
 # @using   : 绘制霍夫空间
 
 exampleFile = open('4.csv')      # 打开csv文件
@@ -38,7 +38,30 @@ for j in range(0, length_zu):
     rho = []
     for i in theta:
         rho.append(x[j]*math.cos(i)+y[j]*math.sin(i))
-    ax.plot(theta,rho)
+    ax.plot(theta,rho,alpha = 1/30,c='g')
     del rho
+
+
+theta = []
+temp = 0
+while temp < 3.14:
+    theta.append(temp)
+    # 0.01 为角度西塔的步长
+    temp = temp + 0.01
+
+rho = []
+temp = -50
+while temp < 350:
+    rho.append(temp)
+    temp = temp + 1
+
+for i in theta:
+    ax.axvline(x=i, ymin=-50, ymax=350)
+for i in rho:
+    ax.axhline(y=i, xmin=0, xmax=3.15)
+
+
+
+
 plt.show()  # 显示
-# plt.savefig('霍夫空间.jpg')
+# plt.savefig('xx4.jpg')
