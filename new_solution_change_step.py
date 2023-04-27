@@ -7,9 +7,16 @@ import random
 # @Email   : ryan1057@csu.edu.cn
 # @File    : new_solution.py
 # @Software: PyCharm
-# @Time    : 2023-04-27 16:34
+# @Time    : 2023-04-27 16:46
 # @Github  : https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform
 # @using   : 精准霍夫变换,步长可调
+
+# ------------------------------------------------光学标定程序------------------------------------------------
+# 参数设置：
+# 设置步长
+step = 0.02
+# 引入误差 输入一个正整数（误差为正负该数）或0（0代表无误差）
+error = 0
 
 exampleFile = open('4.csv')  # 打开csv文件
 exampleReader = csv.reader(exampleFile)  # 读取csv文件
@@ -24,16 +31,16 @@ for i in range(0, length_zu):  # 从第一行开始读取
 
 
 # 误差引入(稳定性分析时启动)
-# for i in range(len(x)):
-#     x[i] += 3 * random.random()-random.randint(0,1)
-#     y[i] += 3 * random.random()-random.randint(0,1)
+if error != 0 :
+    for i in range(len(x)):
+        x[i] += error * random.random()-random.randint(0,1)
+        y[i] += error * random.random()-random.randint(0,1)
 
 # 构建投票矩阵 两条直线的theta取值0.785、2.356，取theta步长0.05
 # theta_1     [0.7---------------0.9]
 # theta_2     [2.2---------------2.4]
 
-# 设置步长
-step = 0.05
+
 
 theta_1 = []
 theta_2 = []
@@ -124,15 +131,15 @@ select_line1_y = []
 select_line2_x = []
 select_line2_y = []
 for i in range(len(x)):
-    if abs(y[i] - lineB[0] - lineK[0] * x[i]) / math.sqrt(1 + lineK[0] * lineK[0]) < 0.6:
+    if abs(y[i] - lineB[0] - lineK[0] * x[i]) / math.sqrt(1 + lineK[0] * lineK[0]) < 0.5:
         select_line1_x.append(x[i])
         select_line1_y.append(y[i])
-    if abs(y[i] - lineB[1] - lineK[1] * x[i]) / math.sqrt(1 + lineK[1] * lineK[1]) < 0.6:
+    if abs(y[i] - lineB[1] - lineK[1] * x[i]) / math.sqrt(1 + lineK[1] * lineK[1]) < 0.5:
         select_line2_x.append(x[i])
         select_line2_y.append(y[i])
 # 根据霍夫直线选了两组点
 plt.scatter(select_line1_x, select_line1_y,s=2**2,alpha=0.6,c='r')
-# plt.scatter(select_line2_x, select_line2_y,s=2**2,alpha=0.6,c='r')
+plt.scatter(select_line2_x, select_line2_y,s=2**2,alpha=0.6,c='r')
 plt.ylim((170, 240))
 ax = plt.gca()
 ax.set_aspect(1)
