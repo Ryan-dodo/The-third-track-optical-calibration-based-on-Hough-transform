@@ -118,7 +118,7 @@ for i in range(len(x)):
         select_line2_x.append(x[i])
         select_line2_y.append(y[i])
 # 根据霍夫直线选了两组点
-# plt.scatter(select_line1_x, select_line1_y,s=2**2,alpha=0.09,c='r')
+plt.scatter(select_line1_x, select_line1_y,s=2**2,alpha=0.09,c='r')
 # plt.scatter(select_line2_x, select_line2_y,s=2**2,alpha=0.09,c='r')
 plt.ylim((170, 240))
 ax = plt.gca()
@@ -184,7 +184,7 @@ for i in list_line:
     line1.append(lineK[0] * i + lineB[0])
     line2.append(lineK[1] * i + lineB[1])
 # 画笛卡尔点图、霍夫直线
-plt.scatter(list_line,line1,s=1**1,c='g',alpha=0.5)
-plt.scatter(list_line,line2,s=1**1,c='g',alpha=0.5)
-plt.scatter(x, y,s=2**2,alpha=0.4)
+# plt.scatter(list_line,line1,s=1**1,c='g',alpha=0.5)
+# plt.scatter(list_line,line2,s=1**1,c='g',alpha=0.5)
+# plt.scatter(x, y,s=2**2,alpha=0.4)
 plt.show()  # 显示
