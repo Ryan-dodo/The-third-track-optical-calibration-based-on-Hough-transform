@@ -7,7 +7,7 @@ import random
 # @Email   : ryan1057@csu.edu.cn
 # @File    : new_solution.py
 # @Software: PyCharm
-# @Time    : 2023-04-27 16:46
+# @Time    : 2023-05-03 21:47
 # @Github  : https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform
 # @using   : 精准霍夫变换,步长可调
 
@@ -126,6 +126,11 @@ plt.ylim((170, 240))
 ax = plt.gca()
 ax.set_aspect(1)
 
+# 算法改进
+''' 原本的算法在霍夫空间里对rho和theta的取值范围比较大，同时步长是固定的，算法稳定性不高，复杂度较高。后续对算法进行了优化，考虑到在标定的工作条件下，
+待提取的两直线角度为45度和135度，投票矩阵选定两直线theta弧度制范围为0.7至0.9与2.2至2.4，超出范围的点不会记入投票，步长可调节。rho的范围不变，精度也不变。
+在theta步长0.05投票的效果较好，引入误差后，仍然能检测出结果
+''' 
 select_line1_x = []
 select_line1_y = []
 select_line2_x = []
