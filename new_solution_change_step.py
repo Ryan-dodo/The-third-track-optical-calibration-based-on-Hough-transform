@@ -2,22 +2,25 @@ import csv
 import matplotlib.pyplot as plt
 import math
 import random
-
+import time
 # @Author  : Ryan
 # @Email   : ryan1057@csu.edu.cn
 # @File    : new_solution.py
 # @Software: PyCharm
-# @Time    : 2023-05-03 21:47
+# @Time    : 2023-05-10 16:33 
 # @Github  : https://github.com/Ryan-dodo/The-third-track-optical-calibration-based-on-Hough-transform
 # @using   : 精准霍夫变换,步长可调
 
 # ------------------------------------------------光学标定程序------------------------------------------------
 # 参数设置：
 # 设置步长
-step = 0.02
+step = 0.1
 # 引入误差 输入一个正整数（误差为正负该数）或0（0代表无误差）
 error = 0
-
+# 直线提取阈值
+threshold = 10
+# ----------------------------------------------------------------------------------------------------------
+start = time.clock()
 exampleFile = open('4.csv')  # 打开csv文件
 exampleReader = csv.reader(exampleFile)  # 读取csv文件
 exampleData = list(exampleReader)  # csv数据转换为列表
@@ -29,19 +32,15 @@ for i in range(0, length_zu):  # 从第一行开始读取
     x.append(float(exampleData[i][0]))  # 将第一列数据从第一行读取到最后一行赋给列表x
     y.append(float(exampleData[i][1]))  # 将第二列数据从第一行读取到最后一行赋给列表y
 
-
 # 误差引入(稳定性分析时启动)
-if error != 0 :
+if error != 0:
     for i in range(len(x)):
-        x[i] += error * random.random()-random.randint(0,1)
-        y[i] += error * random.random()-random.randint(0,1)
+        x[i] += error * random.random() - random.randint(0, 1)
+        y[i] += error * random.random() - random.randint(0, 1)
 
-# 构建投票矩阵 两条直线的theta取值0.785、2.356，取theta步长0.05
+# 构建投票矩阵 两条直线的theta取值大约0.785、2.356，范围如下
 # theta_1     [0.7---------------0.9]
 # theta_2     [2.2---------------2.4]
-
-
-
 theta_1 = []
 theta_2 = []
 temp = 0.7
@@ -55,18 +54,18 @@ while temp <= 2.401:
 print(theta_1)
 print(theta_2)
 
-vote_list = [[0] * 341 for _ in range(len(theta_1)*2)]
+vote_list = [[0] * 341 for _ in range(len(theta_1) * 2)]
 # rho 取值0-340
 # 下面是投票过程
 for j in range(0, length_zu):
     for i in theta_1:
         vote_rho = round(x[j] * math.cos(i) + y[j] * math.sin(i))
-        vote_list[round((i-0.7)/step)][vote_rho] += 1
+        vote_list[round((i - 0.7) / step)][vote_rho] += 1
 
 for j in range(0, length_zu):
     for i in theta_2:
         vote_rho = round(x[j] * math.cos(i) + y[j] * math.sin(i))
-        vote_list[round((i-2.2)/step)+len(theta_1)][vote_rho] += 1
+        vote_list[round((i - 2.2) / step) + len(theta_1)][vote_rho] += 1
 # 展示投票结果
 for _ in vote_list:
     print(_)
@@ -74,7 +73,7 @@ for _ in vote_list:
 max_vote_1 = -1
 theta_1_select = 0
 rho_1_select = 0
-for i in range(0,len(theta_1)):
+for i in range(0, len(theta_1)):
     for j in range(len(vote_list[0])):
         if vote_list[i][j] > max_vote_1:
             max_vote_1 = vote_list[i][j]
@@ -83,12 +82,14 @@ for i in range(0,len(theta_1)):
 print(max_vote_1)
 print(theta_1_select)
 print(rho_1_select)
-
+if max_vote_1 < threshold:
+    print('未能提取直线')
+    threshold = -1
 # 另一组的点
 max_vote_2 = -1
 theta_2_select = 0
 rho_2_select = 0
-for i in range(len(theta_1),len(theta_1) * 2):
+for i in range(len(theta_1), len(theta_1) * 2):
     for j in range(len(vote_list[0])):
         if vote_list[i][j] > max_vote_2:
             max_vote_2 = vote_list[i][j]
@@ -97,119 +98,128 @@ for i in range(len(theta_1),len(theta_1) * 2):
 print(max_vote_2)
 print(theta_2_select)
 print(rho_2_select)
+if max_vote_2 < threshold:
+    print('未能提取直线')
+    threshold = -1
+if threshold != -1:
+    last_rho = [rho_1_select, rho_2_select]
+    last_theta = [theta_1_select, theta_2_select]
+    print(last_rho)
+    print(last_theta)
+    lineK = []
+    lineB = []
+    for i in range(len(last_theta)):
+        lineB.append(last_rho[i] / math.sin(last_theta[i]))
+        lineK.append(-1 * math.cos(last_theta[i]) / math.sin(last_theta[i]))
+    print(lineK)
+    print(lineB)
 
-last_rho = [rho_1_select,rho_2_select]
-last_theta = [theta_1_select,theta_2_select]
-print(last_rho)
-print(last_theta)
-lineK = []
-lineB = []
-for i in range(len(last_theta)):
-    lineB.append(last_rho[i] / math.sin(last_theta[i]))
-    lineK.append(-1 * math.cos(last_theta[i] ) / math.sin(last_theta[i] ))
-print(lineK)
-print(lineB)
+    list_line = []
+    for i in range(10000):
+        list_line.append(-50 + 0.01 * i)
+    line1 = []
+    line2 = []
+    for i in list_line:
+        line1.append(lineK[0] * i + lineB[0])
+        line2.append(lineK[1] * i + lineB[1])
+    # 画笛卡尔点图、霍夫直线
+    plt.scatter(list_line, line1, s=1 ** 2, c='y', alpha=0.5)
+    plt.scatter(list_line, line2, s=1 ** 2, c='y', alpha=0.5)
+    plt.scatter(x, y, s=2 ** 2, alpha=0.4, c='g')
+    plt.ylim((170, 240))
+    ax = plt.gca()
+    ax.set_aspect(1)
 
-list_line = []
-for i in range(10000):
-    list_line.append(-50 + 0.01 * i)
-line1 = []
-line2 = []
-for i in list_line:
-    line1.append(lineK[0] * i + lineB[0])
-    line2.append(lineK[1] * i + lineB[1])
-# 画笛卡尔点图、霍夫直线
-plt.scatter(list_line,line1,s=1**2,c='y',alpha=0.5)
-plt.scatter(list_line,line2,s=1**2,c='y',alpha=0.5)
-plt.scatter(x, y,s=2**2,alpha=0.4,c='g')
-plt.ylim((170, 240))
-ax = plt.gca()
-ax.set_aspect(1)
+    select_line1_x = []
+    select_line1_y = []
+    select_line2_x = []
+    select_line2_y = []
+    for i in range(len(x)):
+        if abs(y[i] - lineB[0] - lineK[0] * x[i]) / math.sqrt(1 + lineK[0] * lineK[0]) < 0.5:
+            select_line1_x.append(x[i])
+            select_line1_y.append(y[i])
+        if abs(y[i] - lineB[1] - lineK[1] * x[i]) / math.sqrt(1 + lineK[1] * lineK[1]) < 0.5:
+            select_line2_x.append(x[i])
+            select_line2_y.append(y[i])
+    # 根据霍夫直线选了两组点
+    # plt.scatter(select_line1_x, select_line1_y, s=2 ** 2, alpha=0.6, c='r')
+    # plt.scatter(select_line2_x, select_line2_y, s=2 ** 2, alpha=0.6, c='r')
+    plt.ylim((170, 240))
+    ax = plt.gca()
+    ax.set_aspect(1)
 
-# 算法改进
-''' 原本的算法在霍夫空间里对rho和theta的取值范围比较大，同时步长是固定的，算法稳定性不高，复杂度较高。后续对算法进行了优化，考虑到在标定的工作条件下，
-待提取的两直线角度为45度和135度，投票矩阵选定两直线theta弧度制范围为0.7至0.9与2.2至2.4，超出范围的点不会记入投票，步长可调节。rho的范围不变，精度也不变。
-在theta步长0.05投票的效果较好，引入误差后，仍然能检测出结果
-''' 
-select_line1_x = []
-select_line1_y = []
-select_line2_x = []
-select_line2_y = []
-for i in range(len(x)):
-    if abs(y[i] - lineB[0] - lineK[0] * x[i]) / math.sqrt(1 + lineK[0] * lineK[0]) < 0.5:
-        select_line1_x.append(x[i])
-        select_line1_y.append(y[i])
-    if abs(y[i] - lineB[1] - lineK[1] * x[i]) / math.sqrt(1 + lineK[1] * lineK[1]) < 0.5:
-        select_line2_x.append(x[i])
-        select_line2_y.append(y[i])
-# 根据霍夫直线选了两组点
-plt.scatter(select_line1_x, select_line1_y,s=2**2,alpha=0.6,c='r')
-plt.scatter(select_line2_x, select_line2_y,s=2**2,alpha=0.6,c='r')
-plt.ylim((170, 240))
-ax = plt.gca()
-ax.set_aspect(1)
+    sigma_line1_xi_2 = 0
+    sigma_line1_yi = 0
+    sigma_line1_xi = 0
+    sigma_line1_xi_yi = 0
+    for i in range(len(select_line1_x)):
+        sigma_line1_xi_2 += select_line1_x[i] * select_line1_x[i]
+        sigma_line1_xi += select_line1_x[i]
+        sigma_line1_yi += select_line1_y[i]
+        sigma_line1_xi_yi += select_line1_x[i] * select_line1_y[i]
+    line1_a = (sigma_line1_xi_2 * sigma_line1_yi - sigma_line1_xi * sigma_line1_xi_yi) / (
+                len(select_line1_x) * sigma_line1_xi_2 - sigma_line1_xi * sigma_line1_xi)
+    line1_b = (len(select_line1_x) * sigma_line1_xi_yi - sigma_line1_yi * sigma_line1_xi) / (
+                len(select_line1_x) * sigma_line1_xi_2 - sigma_line1_xi * sigma_line1_xi)
 
-sigma_line1_xi_2 = 0
-sigma_line1_yi = 0
-sigma_line1_xi = 0
-sigma_line1_xi_yi = 0
-for i in range(len(select_line1_x)):
-    sigma_line1_xi_2 += select_line1_x[i] * select_line1_x[i]
-    sigma_line1_xi += select_line1_x[i]
-    sigma_line1_yi += select_line1_y[i]
-    sigma_line1_xi_yi += select_line1_x[i] * select_line1_y[i]
-line1_a = (sigma_line1_xi_2 * sigma_line1_yi - sigma_line1_xi * sigma_line1_xi_yi)/(len(select_line1_x) * sigma_line1_xi_2 - sigma_line1_xi * sigma_line1_xi)
-line1_b = (len(select_line1_x) * sigma_line1_xi_yi - sigma_line1_yi * sigma_line1_xi)/(len(select_line1_x) * sigma_line1_xi_2 - sigma_line1_xi * sigma_line1_xi)
+    sigma_line2_xi_2 = 0
+    sigma_line2_yi = 0
+    sigma_line2_xi = 0
+    sigma_line2_xi_yi = 0
+    for i in range(len(select_line2_x)):
+        sigma_line2_xi_2 += select_line2_x[i] * select_line2_x[i]
+        sigma_line2_xi += select_line2_x[i]
+        sigma_line2_yi += select_line2_y[i]
+        sigma_line2_xi_yi += select_line2_x[i] * select_line2_y[i]
+    line2_a = (sigma_line2_xi_2 * sigma_line2_yi - sigma_line2_xi * sigma_line2_xi_yi) / (
+                len(select_line2_x) * sigma_line2_xi_2 - sigma_line2_xi * sigma_line2_xi)
+    line2_b = (len(select_line2_x) * sigma_line2_xi_yi - sigma_line2_yi * sigma_line2_xi) / (
+                len(select_line2_x) * sigma_line2_xi_2 - sigma_line2_xi * sigma_line2_xi)
 
-sigma_line2_xi_2 = 0
-sigma_line2_yi = 0
-sigma_line2_xi = 0
-sigma_line2_xi_yi = 0
-for i in range(len(select_line2_x)):
-    sigma_line2_xi_2 += select_line2_x[i] * select_line2_x[i]
-    sigma_line2_xi += select_line2_x[i]
-    sigma_line2_yi += select_line2_y[i]
-    sigma_line2_xi_yi += select_line2_x[i] * select_line2_y[i]
-line2_a = (sigma_line2_xi_2 * sigma_line2_yi - sigma_line2_xi * sigma_line2_xi_yi)/(len(select_line2_x) * sigma_line2_xi_2 - sigma_line2_xi * sigma_line2_xi)
-line2_b = (len(select_line2_x) * sigma_line2_xi_yi - sigma_line2_yi * sigma_line2_xi)/(len(select_line2_x) * sigma_line2_xi_2 - sigma_line2_xi * sigma_line2_xi)
+    # 最小二乘法更新后的k与b
+    lineK[0] = line1_b
+    lineK[1] = line2_b
+    lineB[0] = line1_a
+    lineB[1] = line2_a
+    print(lineK)
+    print(lineB)
+    print('-------------------------------')
 
-# 最小二乘法更新后的k与b
-lineK[0] = line1_b
-lineK[1] = line2_b
-lineB[0] = line1_a
-lineB[1] = line2_a
-print(lineK)
-print(lineB)
+    angle = 0
+    for i in range(len(lineK)):
+        if lineK[i] < 0:
+            pass
+        else:
+            print("角度为：", end='')
+            angle = 90 - math.atan(lineK[i]) / math.pi * 180
+            print(angle, end='')
+            print(' 度')
 
-# 程序运行时间打印
-# end = time.clock()
-# print(end-start)
+    for i in range(len(lineK)):
+        if lineK[i] < 0:
+            can_b = abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) + 140 + 90 * math.cos(math.radians(angle))
+            print('导高为：', end='')
+            print(can_b)
 
-for i in range(len(lineK)):
-    if lineK[i] > 0:
-        can_b = abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) + 140 + 90 * math.cos(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
-        print('导高为：', end='')
-        print(can_b)
-        print("角度为：", end='')
-        jiaodu = 90 - math.atan(lineK[i]) / math.pi * 180
-        print(jiaodu, end='')
-        print('度')
-    else:
-        can_a = 700 - abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) - 46 - 90 * math.sin(math.radians(90 - math.atan(lineK[i]) / math.pi * 180))
-        print('拉出值为：',end='')
-        print(can_a)
+        else:
+            can_a = 700 - abs(lineB[i]) / math.sqrt(1 + lineK[i] * lineK[i]) - 46 - 90 * math.sin(math.radians(angle))
+            print('拉出值为：', end='')
+            print(can_a)
 
-
-list_line = []
-for i in range(10000):
-    list_line.append(-50 + 0.01 * i)
-line1 = []
-line2 = []
-for i in list_line:
-    line1.append(lineK[0] * i + lineB[0])
-    line2.append(lineK[1] * i + lineB[1])
-# 画笛卡尔点图、霍夫直线
-# plt.scatter(list_line,line1,s=1**1,c='g',alpha=0.5)
-# plt.scatter(list_line,line2,s=1**1,c='g',alpha=0.5)
-# plt.scatter(x, y,s=2**2,alpha=0.4)
-plt.show()  # 显示
+    list_line = []
+    for i in range(10000):
+        list_line.append(-50 + 0.01 * i)
+    line1 = []
+    line2 = []
+    for i in list_line:
+        line1.append(lineK[0] * i + lineB[0])
+        line2.append(lineK[1] * i + lineB[1])
+    # 画拟合直线
+    plt.scatter(list_line,line1,s=1**1,c='r',alpha=0.02)
+    plt.scatter(list_line,line2,s=1**1,c='r',alpha=0.02)
+    # 程序运行时间打印
+    end = time.clock()
+    print('程序运行时间：',end='')
+    print(end-start,end='')
+    print(' S')
+    plt.show()  # 显示
